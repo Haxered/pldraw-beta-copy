@@ -10,13 +10,11 @@
 #include "interpreter.hpp"
 #include "expression.hpp"
 
-class QtInterpreter : public QObject, private Interpreter {
+class QtInterpreter : public QObject, Interpreter {
     Q_OBJECT
 
 public:
     QtInterpreter(QObject *parent = nullptr);
-
-    void flushPending();
 
 signals:
     void drawGraphic(QGraphicsItem *item);
@@ -30,8 +28,6 @@ public slots:
 
 private:
     void createGraphicItem(const Expression &exp);
-
-    Expression evaluateSubExpression(const std::string &subExpr);
 };
 
 #endif

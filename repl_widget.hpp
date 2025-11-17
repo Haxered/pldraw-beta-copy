@@ -1,29 +1,29 @@
 #ifndef REPL_WIDGET_HPP
 #define REPL_WIDGET_HPP
 
-#include <QLineEdit>
+#include <QWidget>
 #include <QString>
-#include <QVector>
+
+class QLineEdit;
 
 class REPLWidget : public QWidget {
     Q_OBJECT
 
 public:
-    REPLWidget(QWidget *parent = nullptr);
+    explicit REPLWidget(QWidget *parent = nullptr);
 
-signals:
-    void lineEntered(QString entry);
+    signals:
+        void lineEntered(QString completeExpression);
 
 private slots:
-    void changed();
+    void handleReturnPressed();
 
 private:
     QLineEdit *inputLine;
-    QVector<QString> history;
-    int historyIndex;
-    QString currentInput;
+    QString accumulatedInput;
 
-    bool eventFilter(QObject *obj, QEvent *event) override;
+    bool isBalanced(const QString &text) const;
+    static QString stripComments(const QString &text);
 };
 
 #endif

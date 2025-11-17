@@ -19,7 +19,6 @@
 bool Interpreter::parse_atom(TokenSequenceType::const_iterator &it,
                              const TokenSequenceType::const_iterator &end,
                              Expression &exp) {
-
     if (it == end) {
         return false;
     }
@@ -112,7 +111,6 @@ std::size_t count(const TokenSequenceType &tokens, const std::string &query) {
 // Return true on success; false on syntax errors. Do not throw here.
 // Ensure there is **exactly one** top-level expression (no 0 or >1).
 bool Interpreter::parse(std::istream &expression) noexcept {
-
     try {
         const TokenSequenceType tokens = tokenize(expression);
 
@@ -155,7 +153,7 @@ bool Interpreter::parse(std::istream &expression) noexcept {
         }
 
         ast = root;
-        debug();
+        debug(); // debug print AST if -DPOSTLISP_DEBUG_AST=ON
         return true;
     } catch (...) {
         return false; // catch-all for any unexpected errors
@@ -258,12 +256,10 @@ Expression Interpreter::eval(const Expression &exp) {
     }
 
     if (op == "draw") {
-        for (std::size_t i = 0; i < exp.getTail().size(); ++i) {
-            Expression v = eval(exp.getTail()[i]);
-            if (!is_graphic_atom(v)) {
-                std::ostringstream oss;
-                oss << "draw: argument " << (i + 1) << " is not a graphical object";
-                throw InterpreterSemanticError(oss.str());
+        for (const auto &arg: exp.getTail()) {
+            Expression v = eval(arg);
+            if (is_graphic_atom(v)) {
+                pendingDraws.push_back(v);
             }
         }
         return Expression();
@@ -300,6 +296,6 @@ Expression Interpreter::eval() {
 // Optional: print/dump internal state for debugging (keep silent for grading).
 void Interpreter::debug() const {
 #ifdef POSTLISP_DEBUG_AST
-
+    std::cerr << "[DEBUG AST] " << ast << std::endl;
 #endif
 }

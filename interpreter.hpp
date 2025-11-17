@@ -10,7 +10,13 @@
 // parse method, builds an internal AST
 // eval method, updates Environment, returns last result
 class Interpreter {
+protected:
+    std::vector<Expression> pendingDraws;
+
 public:
+    const std::vector<Expression> &getPendingDraws() const { return pendingDraws; }
+    void clearPendingDraws() { pendingDraws.clear(); }
+
     bool parse(std::istream &expression) noexcept;
 
     Expression eval();

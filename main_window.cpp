@@ -64,5 +64,4 @@ MainWindow::MainWindow(std::string filename, QWidget *parent) : MainWindow(paren
     std::string content = buffer.str();
 
     interp.parseAndEvaluate(QString::fromStdString(content));
-    interp.flushPending();
 }

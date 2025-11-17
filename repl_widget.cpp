@@ -1,12 +1,12 @@
 #include "repl_widget.hpp"
-
+#include <QLineEdit>
 #include <QVBoxLayout>
-#include <QKeyEvent>
 
-REPLWidget::REPLWidget(QWidget *parent) : QWidget(parent), historyIndex(-1) {
+REPLWidget::REPLWidget(QWidget *parent)
+    : QWidget(parent), accumulatedInput("") {
     inputLine = new QLineEdit(this);
-    inputLine->installEventFilter(this);
-    connect(inputLine, &QLineEdit::returnPressed, this, &REPLWidget::changed);
+    connect(inputLine, &QLineEdit::returnPressed,
+            this, &REPLWidget::handleReturnPressed);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -14,58 +14,60 @@ REPLWidget::REPLWidget(QWidget *parent) : QWidget(parent), historyIndex(-1) {
     setLayout(layout);
 }
 
-void REPLWidget::changed() {
-    QString entry = inputLine->text();
-
-    if (!entry.isEmpty()) {
-        history.removeAll(entry);
-        history.prepend(entry);
-
-        emit lineEntered(entry);
-    }
-
+void REPLWidget::handleReturnPressed() {
+    QString currentLine = inputLine->text();
     inputLine->clear();
 
-    historyIndex = -1;
-    currentInput = "";
+    // ignore empty lines
+    if (currentLine.trimmed().isEmpty()) {
+        return;
+    }
+
+    // accumulate with new line
+    accumulatedInput += currentLine + "\n";
+
+    // Check for balanced parentheses, after stripping comments
+    QString toCheck = stripComments(accumulatedInput);
+    if (isBalanced(toCheck)) {
+        emit lineEntered(accumulatedInput);
+        accumulatedInput.clear();
+    }
+    // Otherwise: incomplete, wait for more input TODO: double check if this is correct
 }
 
-bool REPLWidget::eventFilter(QObject *obj, QEvent *event) {
-    if (obj == inputLine && event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+bool REPLWidget::isBalanced(const QString &text) const {
+    int depth = 0;
 
-        if (keyEvent->key() == Qt::Key_Up) {
-            if (history.isEmpty()) {
-                return true;
-            }
-
-            if (historyIndex == -1) {
-                currentInput = inputLine->text();
-            }
-
-            if (historyIndex < history.size() - 1) {
-                historyIndex++;
-                inputLine->setText(history[historyIndex]);
-            }
-
-            return true;
-        }
-        if (keyEvent->key() == Qt::Key_Down) {
-            if (history.isEmpty() || historyIndex <= -1) {
-                return true;
-            }
-
-            if (historyIndex > 0) {
-                historyIndex--;
-                inputLine->setText(history[historyIndex]);
-            } else if (historyIndex == 0) {
-                historyIndex = -1;
-                inputLine->setText(currentInput);
-            }
-
-            return true;
+    for (QChar ch: text) {
+        if (ch == '(') {
+            ++depth;
+        } else if (ch == ')') {
+            --depth;
+            if (depth < 0) return false; // Too many closing parens
         }
     }
 
-    return QWidget::eventFilter(obj, event);
+    return depth == 0;
+}
+
+QString REPLWidget::stripComments(const QString &text) {
+    QString result;
+    bool inComment = false;
+
+    for (QChar ch: text) {
+        if (inComment) {
+            if (ch == '\n') {
+                inComment = false;
+                result += '\n'; // keep \n
+            }
+        } else {
+            if (ch == ';') {
+                inComment = true;
+            } else {
+                result += ch;
+            }
+        }
+    }
+
+    return result;
 }

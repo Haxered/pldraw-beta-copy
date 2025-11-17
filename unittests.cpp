@@ -1,5 +1,3 @@
-// TODO: add more function, varoiable, class, struct, module, Qt library, C++ standard library as you need.
-
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_COLOUR_NONE
 #include "catch.hpp"
@@ -11,6 +9,7 @@
 #include "interpreter_semantic_error.hpp"
 #include "interpreter.hpp"
 #include "expression.hpp"
+#include "environment.hpp"
 #include "test_config.hpp"
 
 // This is example unit test case with Catch 2
