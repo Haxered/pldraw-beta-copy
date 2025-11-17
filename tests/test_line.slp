@@ -1,0 +1,2 @@
+; test lines
+(((0 0 point) (10 0 point) line) draw)

@@ -1,0 +1,2 @@
+; this should cause a semantic error
+(pi 1 define)

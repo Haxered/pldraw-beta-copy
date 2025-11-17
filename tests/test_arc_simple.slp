@@ -1,0 +1,6 @@
+(
+(a (0 0 point) define)
+(b (100 -10 point) define)
+((a b line) draw)
+((a b pi arc) draw)
+begin )

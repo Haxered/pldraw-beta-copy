@@ -1,0 +1,6 @@
+; script to test special forms
+(
+  (a True define)
+  (b a define)
+  (a b and)
+begin )

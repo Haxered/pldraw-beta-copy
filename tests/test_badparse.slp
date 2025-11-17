@@ -1,0 +1,4 @@
+; this should cause a parese error
+(
+(a 1 define)
+begin

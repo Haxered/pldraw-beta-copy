@@ -1,0 +1,19 @@
+; draw a car
+(
+ (front_wheel ((-50 10 point) (-50 0 point) (2 pi *) arc) define)
+ (back_wheel ((50 10 point) (50 0 point) (2 pi *) arc) define)
+ (front_wheel back_wheel draw)
+ (((-36 10 point) (36 10 point) line)draw)
+ (((-50 10 point) (-36 10 point) pi arc) draw)
+ (((50 10 point) (36 10 point) (pi -) arc) draw)
+ (((64 10 point) (80 10 point) line) draw)
+ (((-64 10 point) (-80 10 point) line) draw)
+ (
+  ((30 10 point) (80 10 point) (pi 2 /) arc)
+  ((30 -40 point) (-20 -40 point) line)
+  ((-20 -40 point) (-40 -20 point) line)
+  ((-80 -15 point) (-40 -20 point) line)
+  ((-80 (-6 2 /) point) (-80 -15 point) pi arc)
+  draw)
+begin)
+

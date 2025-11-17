@@ -1,0 +1,6 @@
+; a slightly more complex script, find max of two numbers
+(
+ (a 1 define)
+ (b 2 define)
+ ((a b <) b a if)
+begin )

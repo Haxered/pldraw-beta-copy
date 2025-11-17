@@ -1,0 +1,9 @@
+; test arcs
+(
+ (0 0 point)
+ (-100 -100 point)
+ (-100 100 point)
+ (100 -100 point)
+ (100 100 point)
+ draw
+ )

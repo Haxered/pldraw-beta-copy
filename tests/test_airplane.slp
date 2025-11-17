@@ -1,0 +1,71 @@
+; draw an airplane
+(
+  ; sky blue RGB color
+  (r 135 define)
+  (g 206 define)
+  (b 235 define)
+
+  ; wing coordinate
+
+
+  ; windows
+  (
+    (((-40 -40 point) (0 -65 point) rect) r g b fill_rect)
+    (((30 -40 point) (70 -65 point) rect) r g b fill_rect)
+    (((100 -40 point) (140 -65 point) rect) r g b fill_rect)
+    (((180 -40 point) (280 -65 point) rect) r g b fill_rect)
+
+    ((-40 -40 point) (0 -65 point) rect)
+    ((30 -40 point) (70 -65 point) rect)
+    ((100 -40 point) (140 -65 point) rect)
+    ((180 -40 point) (280 -65 point) rect)
+
+  draw)
+
+
+  ; wing 1
+  (
+    ((-130 -130 point) (-200 -260 point) line)
+    ((-200 -260 point) (-90 -260 point) line)
+    ((-90 -260 point) (100 -130 point) line)
+
+  draw)
+
+  ; wing 2
+  (
+    ((-130 30 point) (-250 190 point) line)
+    ((-250 190 point) (-150 190 point) line)
+    ((-150 190 point) (90 30 point) line)
+
+  draw)
+
+  ; fuselage
+  (
+    ((-280 -100 point) (-130 -130 point) line)
+    ((100 -130 point) (200 -140 point) line)
+    ((-130 -130 point) (100 -130 point) line)
+    ((-280 -100 point) (-340 -150 point) line)
+    ((-340 -150 point) (-390 -150 point) line)
+    ((-390 -150 point) (-350 10 point) line)
+    ((-350 10 point) (-130 30 point) line)
+    ((90 30 point) (200 30 point) line)
+
+    (((50 30 point) (350 -30 point) rect) ellipse)
+    (((50 0 point) (350 -30 point) rect) 255 255 255 fill_rect)
+    (((50 0 point) (200 30 point) rect) 255 255 255 fill_rect)
+
+    ((200 -40 point) (200 -140 point) (pi -3 /) arc)
+
+    (
+      (
+        (200 (100 ((pi 3 /) sin) *) +)
+        (-40 (100 ((pi 3 /) cos) *) -)
+      point)
+      (300 -50 point)
+    line)
+
+    ((300 0 point) (300 -50 point) (pi -2 /) arc)
+
+  draw)
+
+begin)
